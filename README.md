@@ -42,23 +42,25 @@ void setup() {
 }
 
 void loop() {
-  float a = 123.45f;
+  float a = 123.45;
   uint32_t b = 987654321;
   
-  // Pack variables "a" and "b" into byte array and send.
   // Both float and uint32_t data types require 4 bytes, so the size of "data" is 8.
   uint8_t data[8];
+  
+  // Pack variables "a" and "b" into byte array and send.
   Struct::pack<float>(&a,&data[0]);
   Struct::pack<uint32_t>(&b,&data[4]);
   
   Serial.write(data);
   
   // Now, read in a byte array that contain new values for "a" and "b".
-  while ( Serial.available() < 8 ) {}
+  while ( Serial.available() < 8 ) {} // Make sure that at least 8 bytes are available
   for ( uint8_t i = 0 ; i < 8 ; i++ ) {
     data[i] = Serial.read();
   }
   
+  // Unpack binary data to values using "unpack"
   a = Struct::unpack<float>(&data[0]);
   b = Struct::unpack<uint32_t>&data[4]);
 }
